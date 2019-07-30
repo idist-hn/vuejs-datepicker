@@ -126,7 +126,6 @@ export default {
      * @param {Event} event
      */
     keyUp (event) {
-      console.log(event)
       const code = (event.keyCode ? event.keyCode : event.which)
 
       // close calendar if escape or enter are pressed
@@ -139,8 +138,6 @@ export default {
 
       if (this.typeable) {
         const parsedDate = this.getTypedDate(this.input.value)
-        console.log('parsedDate', parsedDate)
-
         if (!isNaN(parsedDate)) {
           this.typedDate = this.input.value
           this.$emit('typedDate', parsedDate)
