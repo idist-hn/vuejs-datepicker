@@ -1,5 +1,5 @@
 {
-  "name": "@hokify/vuejs-datepicker",
+  "name": "@icehaunter/vuejs-datepicker",
   "version": "2.0.2",
   "publishConfig": {
     "access": "public"
@@ -21,14 +21,15 @@
   ],
   "author": "Charlie Kassel <ck@charliekassel.com>",
   "contributors": [
-    "Simon Tretter <s.tretter@gmail.com>"
+    "Simon Tretter <s.tretter@gmail.com>",
+    "Ilya Borovitinov <icehaunter@gmail.com>"
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/hokify/vuejs-datepicker"
+    "url": "https://github.com/icehaunter/vuejs-datepicker"
   },
   "bugs": {
-    "url": "https://github.com/hokify/vuejs-datepicker/issues"
+    "url": "https://github.com/icehaunter/vuejs-datepicker/issues"
   },
   "private": false,
   "license": "MIT",
@@ -42,7 +43,7 @@
     "dev": "cross-env NODE_ENV=development rollup --config build/rollup.config.es.js --watch",
     "serve": "rollup -c build/serve.js --watch",
     "test": "jest --config test/unit/jest.conf.js --coverage",
-    "lint": "eslint --ext .js,.vue src test/unit/specs"
+    "lint": "eslint --ext .js,.vue,.ts src test/unit/specs"
   },
   "pre-commit": [
     "lint",
