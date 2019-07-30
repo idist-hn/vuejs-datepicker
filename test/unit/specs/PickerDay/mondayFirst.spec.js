@@ -15,11 +15,11 @@ describe('PickerDay: Datepicker with monday as first day of week', () => {
   })
 
   it('should return Monday as a first day of week', () => {
-    expect(wrapper.vm.daysOfWeek[0]).toEqual('Mon')
+    expect(wrapper.vm.daysOfWeek[0]).toEqual('Mo')
   })
 
   it('should return Sunday as a seventh day of week', () => {
-    expect(wrapper.vm.daysOfWeek[6]).toEqual('Sun')
+    expect(wrapper.vm.daysOfWeek[6]).toEqual('Su')
   })
 
   it('should have 6 blankDays when month starts from Sunday', () => {

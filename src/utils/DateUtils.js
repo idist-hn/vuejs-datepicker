@@ -199,7 +199,7 @@ const utils = {
   getDaysOfWeek (mondayFirst) {
     const plainDate = new Date()
     const dates = [0, 1, 2, 3, 4, 5, 6]
-    return dates.map((v) => format(setDay(plainDate, mondayFirst ? v + 1 : v), 'ccc', { locale: this.language }))
+    return dates.map((v) => format(setDay(plainDate, mondayFirst ? v + 1 : v), 'cccccc', { locale: this.language }))
   },
 
   /**
