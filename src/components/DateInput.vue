@@ -12,10 +12,10 @@
     <slot name="beforeDateInput"></slot>
     <!-- Input -->
     <input
+      ref="input"
       :type="inline ? 'hidden' : 'text'"
       :class="computedInputClass"
       :name="name"
-      :ref="refName"
       :id="id"
       :value="formattedValue"
       :open-date="openDate"
@@ -47,11 +47,10 @@ export default {
     selectedDate: Date,
     resetTypedDate: [Date],
     format: [String, Function],
-    language: String,
+    language: Object,
     inline: Boolean,
     id: String,
     name: String,
-    refName: String,
     openDate: Date,
     placeholder: String,
     inputClass: [String, Object, Array],
@@ -85,7 +84,7 @@ export default {
       }
       return typeof this.format === 'function'
         ? this.format(this.selectedDate)
-        : this.utils.formatDate(this.utils.parseDate(this.selectedDate, this.format), this.format)
+        : this.utils.formatDate(this.selectedDate, this.format)
     },
 
     computedInputClass () {
@@ -127,6 +126,7 @@ export default {
      * @param {Event} event
      */
     keyUp (event) {
+      console.log(event)
       const code = (event.keyCode ? event.keyCode : event.which)
 
       // close calendar if escape or enter are pressed
@@ -139,6 +139,7 @@ export default {
 
       if (this.typeable) {
         const parsedDate = this.getTypedDate(this.input.value)
+        console.log('parsedDate', parsedDate)
 
         if (!isNaN(parsedDate)) {
           this.typedDate = this.input.value
@@ -177,7 +178,7 @@ export default {
     }
   },
   mounted () {
-    this.input = this.$el.querySelector('input')
+    this.input = this.$refs.input
   }
 }
 // eslint-disable-next-line

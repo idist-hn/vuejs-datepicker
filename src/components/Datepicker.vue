@@ -116,11 +116,10 @@ export default {
     id: String,
     format: {
       type: [String, Function],
-      default: 'DD MMM YYYY'
+      default: 'dd MMM yyyy'
     },
     language: {
-      type: String,
-      default: 'en'
+      type: Object
     },
     openDate: {
       validator: val => utils.validateDateInput(val)
@@ -396,7 +395,7 @@ export default {
      */
     setValue (date) {
       if (typeof date === 'string' || typeof date === 'number') {
-        let parsed = this.utils.parseDate(date)
+        let parsed = this.utils.parseDate(date, this.format)
         date = isNaN(parsed.valueOf()) ? null : parsed
       }
       if (!date) {

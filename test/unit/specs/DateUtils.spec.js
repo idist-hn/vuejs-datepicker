@@ -26,22 +26,22 @@ describe('DateUtils', () => {
   })
 
   it('should format date strings correctly in English', () => {
-    expect(DateUtils.formatDate(new Date(2016, 0, 1), 'D MMMM YYYY')).toEqual('1 January 2016')
-    expect(DateUtils.formatDate(new Date(2016, 0, 9), 'DD MMM YYYY')).toEqual('09 Jan 2016')
-    expect(DateUtils.formatDate(new Date(2016, 0, 9), 'DD MMM YY')).toEqual('09 Jan 16')
-    expect(DateUtils.formatDate(new Date(2016, 2, 9), 'YYYY-MM-DD')).toEqual('2016-03-09')
-    expect(DateUtils.formatDate(new Date(2016, 2, 9), 'Do MMMM YYYY')).toEqual('9th March 2016')
-    expect(DateUtils.formatDate(new Date(2016, 2, 1), 'Do MMMM YYYY')).toEqual('1st March 2016')
-    expect(DateUtils.formatDate(new Date(2016, 2, 2), 'Do MMMM YYYY')).toEqual('2nd March 2016')
-    expect(DateUtils.formatDate(new Date(2016, 2, 3), 'Do MMMM YYYY')).toEqual('3rd March 2016')
-    expect(DateUtils.formatDate(new Date(2016, 7, 1), 'ddd Do MMMM YYYY')).toEqual('Mon 1st August 2016')
-    expect(DateUtils.formatDate(new Date(2016, 8, 1), 'ddd Do MMMM YYYY')).toEqual('Thu 1st September 2016')
-    expect(DateUtils.formatDate(new Date(2016, 7, 7), 'ddd Do MMMM YYYY')).toEqual('Sun 7th August 2016')
-    expect(DateUtils.formatDate(new Date(2016, 11, 2), 'DD MMM YYYY')).toEqual('02 Dec 2016')
+    expect(DateUtils.formatDate(new Date(2016, 0, 1), 'd MMMM yyyy')).toEqual('1 January 2016')
+    expect(DateUtils.formatDate(new Date(2016, 0, 9), 'dd MMM yyyy')).toEqual('09 Jan 2016')
+    expect(DateUtils.formatDate(new Date(2016, 0, 9), 'dd MMM yy')).toEqual('09 Jan 16')
+    expect(DateUtils.formatDate(new Date(2016, 2, 9), 'yyyy-MM-dd')).toEqual('2016-03-09')
+    expect(DateUtils.formatDate(new Date(2016, 2, 9), 'do MMMM yyyy')).toEqual('9th March 2016')
+    expect(DateUtils.formatDate(new Date(2016, 2, 1), 'do MMMM yyyy')).toEqual('1st March 2016')
+    expect(DateUtils.formatDate(new Date(2016, 2, 2), 'do MMMM yyyy')).toEqual('2nd March 2016')
+    expect(DateUtils.formatDate(new Date(2016, 2, 3), 'do MMMM yyyy')).toEqual('3rd March 2016')
+    expect(DateUtils.formatDate(new Date(2016, 7, 1), 'ccc do MMMM yyyy')).toEqual('Mon 1st August 2016')
+    expect(DateUtils.formatDate(new Date(2016, 8, 1), 'ccc do MMMM yyyy')).toEqual('Thu 1st September 2016')
+    expect(DateUtils.formatDate(new Date(2016, 7, 7), 'ccc do MMMM yyyy')).toEqual('Sun 7th August 2016')
+    expect(DateUtils.formatDate(new Date(2016, 11, 2), 'dd MMM yyyy')).toEqual('02 Dec 2016')
   })
 
   it('should give the correct day', () => {
-    expect(DateUtils.formatDate(new Date(2016, 8, 12), 'ddd')).toEqual('Mon')
+    expect(DateUtils.formatDate(new Date(2016, 8, 12), 'ccc')).toEqual('Mon')
   })
 
   it('can create an array of dates', () => {
