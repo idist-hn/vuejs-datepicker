@@ -30,7 +30,7 @@
       <span class="cell day-header" v-for="d in daysOfWeek" :key="d.timestamp">{{ d }}</span>
     </div>
     <div class="label-separator"></div>
-    <div :class="isRtl ? 'flex-rtl' : ''">
+    <div :class="isRtl ? 'flex-rtl' : ''" class="cell-block days">
       <!-- <template v-if="blankDays > 0">
         <span class="cell day blank" v-for="d in blankDays" :key="d.timestamp"></span>
       </template> -->

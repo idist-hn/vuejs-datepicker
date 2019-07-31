@@ -26,13 +26,15 @@
         </svg>
       </span>
     </header>
-    <span class="cell month"
-      v-for="month in months"
-      :key="month.timestamp"
-      :class="{'selected': month.isSelected, 'disabled': month.isDisabled}"
-      @click.stop="selectMonth(month)">
-      <span>{{ month.month }}</span>
-    </span>
+    <div class="cell-block months">
+      <span class="cell month"
+        v-for="month in months"
+        :key="month.timestamp"
+        :class="{'selected': month.isSelected, 'disabled': month.isDisabled}"
+        @click.stop="selectMonth(month)">
+        <span>{{ month.month }}</span>
+      </span>
+    </div>
   </div>
 </template>
 <script>

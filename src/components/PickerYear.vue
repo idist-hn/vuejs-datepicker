@@ -26,12 +26,14 @@
         </svg>
       </span>
     </header>
-    <span
-      class="cell year"
-      v-for="year in years"
-      :key="year.timestamp"
-      :class="{ 'selected': year.isSelected, 'disabled': year.isDisabled }"
-      @click.stop="selectYear(year)"><span>{{ year.year }}</span></span>
+    <div class="cell-block years">
+      <span
+        class="cell year"
+        v-for="year in years"
+        :key="year.timestamp"
+        :class="{ 'selected': year.isSelected, 'disabled': year.isDisabled }"
+        @click.stop="selectYear(year)"><span>{{ year.year }}</span></span>
+    </div>
   </div>
 </template>
 <script>
