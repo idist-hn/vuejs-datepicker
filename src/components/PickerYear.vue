@@ -5,12 +5,26 @@
       <span
         @click="isRtl ? nextDecade() : previousDecade()"
         class="prev"
-        :class="{'disabled': isLeftNavDisabled}">&lt;</span>
+        :class="{'disabled': isLeftNavDisabled}">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 6 8">
+          <g fill="none" fill-rule="evenodd">
+            <path stroke="none" d="M-9 16V-8h24v24z"/>
+            <path stroke-linecap="round" stroke-linejoin="round" d="M5 0L1 4l4 4"/>
+          </g>
+        </svg>
+      </span>
       <span>{{ getPageDecade }}</span>
       <span
         @click="isRtl ? previousDecade() : nextDecade()"
         class="next"
-        :class="{'disabled': isRightNavDisabled}">&gt;</span>
+        :class="{'disabled': isRightNavDisabled}">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 6 8">
+          <g fill="none" fill-rule="evenodd">
+            <path stroke="none" d="M15-8v24H-9V-8z"/>
+            <path stroke-linecap="round" stroke-linejoin="round" d="M1 8l4-4-4-4"/>
+          </g>
+        </svg>
+      </span>
     </header>
     <span
       class="cell year"

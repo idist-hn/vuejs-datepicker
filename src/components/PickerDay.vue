@@ -5,21 +5,35 @@
       <span
         @click="isRtl ? nextMonth() : previousMonth()"
         class="prev"
-        :class="{'disabled': isLeftNavDisabled}">&lt;</span>
+        :class="{'disabled': isLeftNavDisabled}">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 6 8">
+          <g fill="none" fill-rule="evenodd">
+            <path stroke="none" d="M-9 16V-8h24v24z"/>
+            <path stroke-linecap="round" stroke-linejoin="round" d="M5 0L1 4l4 4"/>
+          </g>
+        </svg>
+      </span>
       <span class="day__month_btn" @click="showMonthCalendar" :class="allowedToShowView('month') ? 'up' : ''">{{ isYmd ? currYearName : currMonthName }} {{ isYmd ? currMonthName : currYearName }}</span>
       <span
         @click="isRtl ? previousMonth() : nextMonth()"
         class="next"
-        :class="{'disabled': isRightNavDisabled}">&gt;</span>
+        :class="{'disabled': isRightNavDisabled}">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 6 8">
+          <g fill="none" fill-rule="evenodd">
+            <path stroke="none" d="M15-8v24H-9V-8z"/>
+            <path stroke-linecap="round" stroke-linejoin="round" d="M1 8l4-4-4-4"/>
+          </g>
+        </svg>
+      </span>
     </header>
     <div class="day-labels">
       <span class="cell day-header" v-for="d in daysOfWeek" :key="d.timestamp">{{ d }}</span>
     </div>
     <div class="label-separator"></div>
     <div :class="isRtl ? 'flex-rtl' : ''">
-      <template v-if="blankDays > 0">
+      <!-- <template v-if="blankDays > 0">
         <span class="cell day blank" v-for="d in blankDays" :key="d.timestamp"></span>
-      </template>
+      </template> -->
       <span class="cell day"
           v-for="day in days"
           :key="day.timestamp"
@@ -32,6 +46,7 @@
 </template>
 <script>
 import { makeDateUtils, rtlLangs, langYearSuffix, ymdLangs } from '../utils/DateUtils'
+import { getDaysInMonth, lastDayOfMonth, getDay, subDays, addDays, getDate, isSameMonth } from 'date-fns'
 
 export default {
   props: {
@@ -98,29 +113,36 @@ export default {
      */
     days () {
       const d = this.pageDate
-      const days = []
       // set up a new date object to the beginning of the current 'page'
-      const dObj = this.useUtc
+      const firstDay = this.useUtc
         ? new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), 1))
         : new Date(d.getFullYear(), d.getMonth(), 1, d.getHours(), d.getMinutes())
-      const daysInMonth = this.utils.daysInMonth(this.utils.getFullYear(dObj), this.utils.getMonth(dObj))
-      for (let i = 0; i < daysInMonth; i++) {
-        days.push({
-          date: this.utils.getDate(dObj),
-          timestamp: dObj.getTime(),
-          isSelected: this.isSelectedDate(dObj),
-          isDisabled: this.isDisabledDate(dObj),
-          isHighlighted: this.isHighlightedDate(dObj),
-          isHighlightStart: this.isHighlightStart(dObj),
-          isHighlightEnd: this.isHighlightEnd(dObj),
-          isToday: this.utils.compareDates(dObj, new Date()),
-          isWeekend: this.utils.getDay(dObj) === 0 || this.utils.getDay(dObj) === 6,
-          isSaturday: this.utils.getDay(dObj) === 6,
-          isSunday: this.utils.getDay(dObj) === 0
-        })
-        this.utils.setDate(dObj, this.utils.getDate(dObj) + 1)
-      }
-      return days
+      const lastDay = lastDayOfMonth(firstDay)
+      const daysInMonth = getDaysInMonth(firstDay)
+
+      const firstDayOfWeek = getDay(firstDay)
+      const showBefore = firstDayOfWeek - (this.mondayFirst ? 1 : 0)
+
+      const lastDayOfWeek = getDay(lastDay)
+      const showAfter = (this.mondayFirst ? 7 : 6) - lastDayOfWeek
+
+      const startWith = subDays(firstDay, showBefore)
+
+      const indexes = Array.from({ length: showBefore + daysInMonth + showAfter }, (x, i) => i)
+
+      return indexes.map((value) => addDays(startWith, value)).map((date) => ({
+        date: getDate(date),
+        timestamp: date.getTime(),
+        isSelected: this.isSelectedDate(date),
+        isDisabled: this.isDisabledDate(date) || !isSameMonth(date, firstDay),
+        isHighlighted: this.isHighlightedDate(date),
+        isHighlightStart: this.isHighlightStart(date),
+        isHighlightEnd: this.isHighlightEnd(date),
+        isToday: this.utils.compareDates(date, new Date()),
+        isWeekend: this.utils.getDay(date) === 0 || this.utils.getDay(date) === 6,
+        isSaturday: this.utils.getDay(date) === 6,
+        isSunday: this.utils.getDay(date) === 0
+      }))
     },
     /**
      * Gets the name of the month the current page is on
