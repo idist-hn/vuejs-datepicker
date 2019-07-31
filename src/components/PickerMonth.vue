@@ -16,7 +16,9 @@
       v-for="month in months"
       :key="month.timestamp"
       :class="{'selected': month.isSelected, 'disabled': month.isDisabled}"
-      @click.stop="selectMonth(month)">{{ month.month }}</span>
+      @click.stop="selectMonth(month)">
+      <span>{{ month.month }}</span>
+    </span>
   </div>
 </template>
 <script>
