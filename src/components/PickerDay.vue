@@ -18,7 +18,7 @@
     <div class="label-separator"></div>
     <div :class="isRtl ? 'flex-rtl' : ''">
       <template v-if="blankDays > 0">
-        <span class="cell day blank" v-for="d in blankDays" :key="d.timestamp">{{ d }}</span>
+        <span class="cell day blank" v-for="d in blankDays" :key="d.timestamp"></span>
       </template>
       <span class="cell day"
           v-for="day in days"
