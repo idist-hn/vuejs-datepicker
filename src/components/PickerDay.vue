@@ -128,7 +128,11 @@ export default {
 
       const startWith = subDays(firstDay, showBefore)
 
-      const indexes = Array.from({ length: showBefore + daysInMonth + showAfter }, (x, i) => i)
+      const indexes = []
+
+      for (let i = 0; i < showBefore + daysInMonth + showAfter; ++i) {
+        indexes.push(i)
+      }
 
       return indexes.map((value) => addDays(startWith, value)).map((date) => ({
         date: getDate(date),
