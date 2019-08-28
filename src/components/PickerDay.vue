@@ -116,15 +116,17 @@ export default {
       // set up a new date object to the beginning of the current 'page'
       const firstDay = this.useUtc
         ? new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), 1))
-        : new Date(d.getFullYear(), d.getMonth(), 1, d.getHours(), d.getMinutes())
+        : new Date(d.getFullYear(), d.getMonth(), 1, 12, 0)
+
       const lastDay = lastDayOfMonth(firstDay)
       const daysInMonth = getDaysInMonth(firstDay)
 
       const firstDayOfWeek = getDay(firstDay)
-      const showBefore = firstDayOfWeek - (this.mondayFirst ? 1 : 0)
+      let showBefore = firstDayOfWeek - (this.mondayFirst ? 1 : 0)
+      showBefore = showBefore < 0 ? 6 : showBefore
 
       const lastDayOfWeek = getDay(lastDay)
-      const showAfter = (this.mondayFirst ? 7 : 6) - lastDayOfWeek
+      const showAfter = this.mondayFirst ? (7 - lastDayOfWeek) % 7 : 6 - lastDayOfWeek
 
       const startWith = subDays(firstDay, showBefore)
 
