@@ -33,6 +33,26 @@
     </date-input>
 
     <!-- Day View -->
+    <picker-time
+      v-if="allowedToShowView('time')"
+      :pageDate="pageDate"
+      :selectedDate="selectedDate"
+      :showTimeView="showTimeView"
+      :fullMonthName="fullMonthName"
+      :allowedToShowView="allowedToShowView"
+      :highlighted="highlighted"
+      :calendarClass="calendarClass"
+      :calendarStyle="calendarStyle"
+      :language="language"
+      :dayCellContent="dayCellContent"
+      :use-utc="useUtc"
+      @selectHour="selectHour"
+      @selectTime="selectTime"
+      @showDayCalendar="showDayCalendar"
+      @selectedDisabled="selectDisabledDate">
+      <slot name="beforeCalendarHeader" slot="beforeCalendarHeader"></slot>
+    </picker-time>
+    <!-- Day View -->
     <picker-day
       v-if="allowedToShowView('day')"
       :pageDate="pageDate"
@@ -94,35 +114,37 @@
 </template>
 <script>
 // import en from '../locale/languages/en'
-import DateInput from './DateInput.vue'
-import PickerDay from './PickerDay.vue'
-import PickerMonth from './PickerMonth.vue'
-import PickerYear from './PickerYear.vue'
-import utils, { makeDateUtils, rtlLangs } from '../utils/DateUtils'
+import DateInput from './DateInput.vue';
+import PickerDay from './PickerDay.vue';
+import PickerMonth from './PickerMonth.vue';
+import PickerYear from './PickerYear.vue';
+import PickerTime from './PickerTime.vue';
+import utils, {makeDateUtils, rtlLangs} from '../utils/DateUtils';
 
 export default {
   components: {
     DateInput,
     PickerDay,
     PickerMonth,
-    PickerYear
+    PickerYear,
+    PickerTime,
   },
   props: {
     value: {
-      validator: val => utils.validateDateInput(val)
+      validator: val => utils.validateDateInput(val),
     },
     name: String,
     refName: String,
     id: String,
     format: {
       type: [String, Function],
-      default: 'dd MMM yyyy'
+      default: 'dd MMM yyyy',
     },
     language: {
-      type: Object
+      type: Object,
     },
     openDate: {
-      validator: val => utils.validateDateInput(val)
+      validator: val => utils.validateDateInput(val),
     },
     dayCellContent: Function,
     fullMonthName: Boolean,
@@ -148,18 +170,18 @@ export default {
     useUtc: Boolean,
     minimumView: {
       type: String,
-      default: 'day'
+      default: 'day',
     },
     maximumView: {
       type: String,
-      default: 'year'
+      default: 'year',
     },
-    showCalendarOnFocus: Boolean
+    showCalendarOnFocus: Boolean,
   },
-  data () {
-    const startDate = this.openDate ? new Date(this.openDate) : new Date()
-    const constructedDateUtils = makeDateUtils(this.useUtc, this.language)
-    const pageTimestamp = constructedDateUtils.setDate(startDate, 1)
+  data() {
+    const startDate = this.openDate ? new Date(this.openDate) : new Date();
+    const constructedDateUtils = makeDateUtils(this.useUtc, this.language);
+    const pageTimestamp = constructedDateUtils.setDate(startDate, 1);
     return {
       /*
        * Vue cannot observe changes to a Date Object so date must be stored as a timestamp
@@ -176,6 +198,7 @@ export default {
        * Flags to show calendar views
        * {Boolean}
        */
+      showTimeView: false,
       showDayView: false,
       showMonthView: false,
       showYearView: false,
@@ -184,97 +207,103 @@ export default {
        */
       calendarHeight: 0,
       resetTypedDate: new Date(),
-      utils: constructedDateUtils
-    }
+      utils: constructedDateUtils,
+    };
   },
   watch: {
-    language (newLanguage) {
-      this.utils = makeDateUtils(this.useUtc, newLanguage)
+    language(newLanguage) {
+      this.utils = makeDateUtils(this.useUtc, newLanguage);
     },
-    useUtc (newUtc) {
-      this.utils = makeDateUtils(newUtc, this.language)
+    useUtc(newUtc) {
+      this.utils = makeDateUtils(newUtc, this.language);
     },
-    value (value) {
-      this.setValue(value)
+    value(value) {
+      this.setValue(value);
     },
-    openDate () {
-      this.setPageDate()
+    openDate() {
+      this.setPageDate();
     },
-    initialView () {
-      this.setInitialView()
-    }
+    initialView() {
+      this.setInitialView();
+    },
   },
   computed: {
-    computedInitialView () {
+    computedInitialView() {
       if (!this.initialView) {
-        return this.minimumView
+        return this.minimumView;
       }
 
-      return this.initialView
+      return this.initialView;
     },
-    pageDate () {
-      return new Date(this.pageTimestamp)
+    pageDate() {
+      return new Date(this.pageTimestamp);
     },
 
-    calendarStyle () {
+    calendarStyle() {
       return {
-        position: this.isInline ? 'static' : undefined
-      }
+        position: this.isInline ? 'static' : undefined,
+      };
     },
-    isOpen () {
-      return this.showDayView || this.showMonthView || this.showYearView
+    isOpen() {
+      return this.showDayView || this.showMonthView || this.showYearView;
     },
-    isInline () {
-      return !!this.inline
+    isInline() {
+      return !!this.inline;
     },
-    isRtl () {
-      return rtlLangs.indexOf(this.language) !== -1
-    }
+    isRtl() {
+      return rtlLangs.indexOf(this.language) !== -1;
+    },
   },
   methods: {
     /**
      * Called in the event that the user navigates to date pages and
      * closes the picker without selecting a date.
      */
-    resetDefaultPageDate () {
+    resetDefaultPageDate() {
       if (this.selectedDate === null) {
-        this.setPageDate()
-        return
+        this.setPageDate();
+        return;
       }
-      this.setPageDate(this.selectedDate)
+      this.setPageDate(this.selectedDate);
     },
     /**
      * Effectively a toggle to show/hide the calendar
      * @return {mixed}
      */
-    showCalendar () {
+    showCalendar() {
       if (this.disabled || this.isInline) {
-        return false
+        return false;
       }
       if (this.isOpen) {
-        return this.close(true)
+        return this.close(true);
       }
-      this.setInitialView()
-      this.$emit('opened')
+      this.setInitialView();
+      this.$emit('opened');
     },
     /**
      * Sets the initial picker page view: day, month or year
      */
-    setInitialView () {
-      const initialView = this.computedInitialView
+    setInitialView() {
+      const initialView = this.computedInitialView;
       if (!this.allowedToShowView(initialView)) {
-        throw new Error(`initialView '${this.initialView}' cannot be rendered based on minimum '${this.minimumView}' and maximum '${this.maximumView}'`)
+        throw new Error(
+          `initialView '${this.initialView}' cannot be rendered based on minimum '${this.minimumView}' and maximum '${this.maximumView}'`);
       }
+
+      console.log({initialView});
       switch (initialView) {
         case 'year':
-          this.showYearCalendar()
-          break
+          this.showYearCalendar();
+          break;
         case 'month':
-          this.showMonthCalendar()
-          break
+          this.showMonthCalendar();
+          break;
+        case 'time':
+          this.showTimeCalendar();
+          break;
         default:
-          this.showDayCalendar()
-          break
+          this.showDayCalendar();
+          break;
       }
     },
     /**
@@ -282,184 +311,210 @@ export default {
      * @param {String} view
      * @return {Boolean}
      */
-    allowedToShowView (view) {
-      const views = ['day', 'month', 'year']
-      const minimumViewIndex = views.indexOf(this.minimumView)
-      const maximumViewIndex = views.indexOf(this.maximumView)
-      const viewIndex = views.indexOf(view)
-
-      return viewIndex >= minimumViewIndex && viewIndex <= maximumViewIndex
+    allowedToShowView(view) {
+      const views = ['day', 'time', 'month', 'year'];
+      const minimumViewIndex = views.indexOf(this.minimumView);
+      const maximumViewIndex = views.indexOf(this.maximumView);
+      const viewIndex = views.indexOf(view);
+      console.log('view ', view, viewIndex);
+      return viewIndex >= minimumViewIndex && viewIndex <= maximumViewIndex;
+    },
+    /**
+     * Show the time picker
+     * @return {Boolean}
+     */
+    showTimeCalendar() {
+      if (!this.allowedToShowView('time')) {
+        return false;
+      }
+      this.close();
+      console.log('showTimeCalendar: time');
+      this.showTimeView = true;
+      return true;
     },
     /**
      * Show the day picker
      * @return {Boolean}
      */
-    showDayCalendar () {
+    showDayCalendar() {
       if (!this.allowedToShowView('day')) {
-        return false
+        return false;
       }
-      this.close()
-      this.showDayView = true
-      return true
+      this.close();
+      this.showDayView = true;
+      return true;
     },
     /**
      * Show the month picker
      * @return {Boolean}
      */
-    showMonthCalendar () {
+    showMonthCalendar() {
       if (!this.allowedToShowView('month')) {
-        return false
+        return false;
       }
-      this.close()
-      this.showMonthView = true
-      return true
+      this.close();
+      this.showMonthView = true;
+      return true;
     },
     /**
      * Show the year picker
      * @return {Boolean}
      */
-    showYearCalendar () {
+    showYearCalendar() {
       if (!this.allowedToShowView('year')) {
-        return false
+        return false;
       }
-      this.close()
-      this.showYearView = true
-      return true
+      this.close();
+      this.showYearView = true;
+      return true;
     },
     /**
      * Set the selected date
      * @param {Number} timestamp
      */
-    setDate (timestamp) {
-      const date = new Date(timestamp)
-      this.selectedDate = date
-      this.setPageDate(date)
-      this.$emit('selected', date)
-      this.$emit('input', date)
+    setDate(timestamp) {
+      const date = new Date(timestamp);
+      this.selectedDate = date;
+      this.setPageDate(date);
+      this.$emit('selected', date);
+      this.$emit('input', date);
     },
     /**
      * Clear the selected date
      */
-    clearDate () {
-      this.selectedDate = null
-      this.setPageDate()
-      this.$emit('selected', null)
-      this.$emit('input', null)
-      this.$emit('cleared')
+    clearDate() {
+      this.selectedDate = null;
+      this.setPageDate();
+      this.$emit('selected', null);
+      this.$emit('input', null);
+      this.$emit('cleared');
+    },
+    selectHour(time) {
+      this.setDate(time.timestamp)
+    },
+    selectTime(time) {
+      this.setDate(time.timestamp)
+      this.close(true);
     },
     /**
      * @param {Object} date
      */
-    selectDate (date) {
-      this.setDate(date.timestamp)
-      if (!this.isInline) {
-        this.close(true)
+    selectDate(date) {
+
+      console.log('selected date, next to time ', this.allowedToShowView('time'));
+      if (this.allowedToShowView('time')) {
+        this.showTimeCalendar();
+      } else {
+        this.setDate(date.timestamp);
+        if (!this.isInline) {
+          this.close(true);
+        }
+        this.resetTypedDate = new Date();
       }
-      this.resetTypedDate = new Date()
     },
     /**
      * @param {Object} date
      */
-    selectDisabledDate (date) {
-      this.$emit('selectedDisabled', date)
+    selectDisabledDate(date) {
+      this.$emit('selectedDisabled', date);
     },
     /**
      * @param {Object} month
      */
-    selectMonth (month) {
-      const date = new Date(month.timestamp)
+    selectMonth(month) {
+      const date = new Date(month.timestamp);
       if (this.allowedToShowView('day')) {
-        this.setPageDate(date)
-        this.$emit('changedMonth', month)
-        this.showDayCalendar()
+        this.setPageDate(date);
+        this.$emit('changedMonth', month);
+        this.showDayCalendar();
       } else {
-        this.selectDate(month)
+        this.selectDate(month);
       }
     },
     /**
      * @param {Object} year
      */
-    selectYear (year) {
-      const date = new Date(year.timestamp)
+    selectYear(year) {
+      const date = new Date(year.timestamp);
       if (this.allowedToShowView('month')) {
-        this.setPageDate(date)
-        this.$emit('changedYear', year)
-        this.showMonthCalendar()
+        this.setPageDate(date);
+        this.$emit('changedYear', year);
+        this.showMonthCalendar();
       } else {
-        this.selectDate(year)
+        this.selectDate(year);
       }
     },
     /**
      * Set the datepicker value
      * @param {Date|String|Number|null} date
      */
-    setValue (date) {
+    setValue(date) {
       if (typeof date === 'string' || typeof date === 'number') {
-        const parsed = this.utils.parseDate(date, this.format)
-        date = isNaN(parsed.valueOf()) ? null : parsed
+        const parsed = this.utils.parseDate(date, this.format);
+        date = isNaN(parsed.valueOf()) ? null : parsed;
       }
       if (!date) {
-        this.setPageDate()
-        this.selectedDate = null
-        return
+        this.setPageDate();
+        this.selectedDate = null;
+        return;
       }
-      this.selectedDate = date
-      this.setPageDate(date)
+      this.selectedDate = date;
+      this.setPageDate(date);
     },
     /**
      * Sets the date that the calendar should open on
      */
-    setPageDate (date) {
+    setPageDate(date) {
       if (!date) {
         if (this.openDate) {
-          date = new Date(this.openDate)
+          date = new Date(this.openDate);
         } else {
-          date = new Date()
+          date = new Date();
         }
       }
-      this.pageTimestamp = this.utils.setDate(new Date(date), 1)
+      this.pageTimestamp = this.utils.setDate(new Date(date), 1);
     },
     /**
      * Handles a month change from the day picker
      */
-    handleChangedMonthFromDayPicker (date) {
-      this.setPageDate(date)
-      this.$emit('changedMonth', date)
+    handleChangedMonthFromDayPicker(date) {
+      this.setPageDate(date);
+      this.$emit('changedMonth', date);
     },
     /**
      * Set the date from a typedDate event
      */
-    setTypedDate (date) {
-      this.setDate(date.getTime())
+    setTypedDate(date) {
+      this.setDate(date.getTime());
     },
     /**
      * Close all calendar layers
      * @param {Boolean} emitEvent - emit close event
      */
-    close (emitEvent) {
-      this.showDayView = this.showMonthView = this.showYearView = false
+    close(emitEvent) {
+      this.showDayView = this.showMonthView = this.showYearView = this.showTimeView = false;
       if (!this.isInline) {
         if (emitEvent) {
-          this.$emit('closed')
+          this.$emit('closed');
         }
-        document.removeEventListener('click', this.clickOutside, false)
+        document.removeEventListener('click', this.clickOutside, false);
       }
     },
     /**
      * Initiate the component
      */
-    init () {
+    init() {
       if (this.value) {
-        this.setValue(this.value)
+        this.setValue(this.value);
       }
       if (this.isInline) {
-        this.setInitialView()
+        this.setInitialView();
       }
-    }
+    },
   },
-  mounted () {
-    this.init()
-  }
+  mounted() {
+    this.init();
+  },
 }
 // eslint-disable-next-line
 ;

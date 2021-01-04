@@ -1,10 +1,12 @@
 .rtl {
   direction: rtl;
 }
+
 .vdp-datepicker {
   position: relative;
 
   text-align: left;
+
   * {
     box-sizing: border-box;
   }
@@ -18,15 +20,27 @@
 
   border: 1px solid #ccc;
   background: white;
+  right: 0;
+
   header {
     display: flex;
 
     line-height: 40px;
+
     span {
       display: inline-block;
       float: left;
 
       width: percentage(5 / 7);
+
+      text-align: center;
+    }
+
+    .day__time_btn {
+      display: inline-block;
+      float: left;
+
+      width: percentage(7 / 7);
 
       text-align: center;
     }
@@ -56,6 +70,7 @@
     .next:not(.disabled),
     .up:not(.disabled) {
       cursor: pointer;
+
       &:hover {
         background: #eee;
       }
@@ -67,13 +82,17 @@
 
     color: #ddd;
   }
+
   .flex-rtl {
     display: flex;
     flex-wrap: wrap;
 
     width: inherit;
   }
-
+  .hour-times {
+    max-height: 150px;
+    overflow: auto;
+  }
   .cell {
     display: inline-block;
 
@@ -87,29 +106,42 @@
     border: 1px solid transparent;
 
     line-height: 40px;
+
+    &.time {
+      width: percentage(7 / 7);
+    }
+
     &:not(.blank):not(.disabled).day,
+    &:not(.blank):not(.disabled).time,
     &:not(.blank):not(.disabled).month,
     &:not(.blank):not(.disabled).year {
       cursor: pointer;
+
       &:hover {
         border: 1px solid #4bd;
       }
     }
+
     &.selected {
       background: #4bd;
+
       &:hover {
         background: #4bd;
       }
+
       &.highlighted {
         background: #4bd;
       }
     }
+
     &.highlighted {
       background: #cae5ed;
+
       &.disabled {
         color: #a3a3a3;
       }
     }
+
     &.grey {
       color: #888;
 
@@ -117,11 +149,13 @@
         background: inherit;
       }
     }
+
     &.day-header {
       cursor: inherit;
       white-space: nowrap;
 
       font-size: 75%;
+
       &:hover {
         background: inherit;
       }
@@ -139,6 +173,7 @@
   cursor: pointer;
 
   font-style: normal;
+
   &.disabled {
     cursor: default;
 
